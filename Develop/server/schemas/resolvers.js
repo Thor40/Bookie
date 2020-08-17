@@ -62,6 +62,21 @@ const resolvers = {
             }
 
             throw new AuthenticationError('You need to be logged in!');
+        },
+        removeBook: async (parent, args, context) => {
+            if (context.user) {
+                const book = await Book.findByIdAndUpdate({ ...args, book: context.book.bookId });
+
+                await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $push: { books: bookId._id } },
+                    { new: true }
+                );
+
+                return book;
+            }
+
+            throw new AuthenticationError('You need to be logged in!');
         }
     }
 };
